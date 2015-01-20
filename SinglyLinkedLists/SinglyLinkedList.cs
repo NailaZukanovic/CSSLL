@@ -7,6 +7,7 @@ namespace SinglyLinkedLists
 {
     public class SinglyLinkedList
     {
+        private SinglyLinkedListNode firstNode;
         public SinglyLinkedList()
         {
             // NOTE: This constructor isn't necessary, once you've implemented the constructor below.
@@ -15,6 +16,10 @@ namespace SinglyLinkedLists
         // READ: http://msdn.microsoft.com/en-us/library/aa691335(v=vs.71).aspx
         public SinglyLinkedList(params object[] values)
         {
+            foreach (object thing in values)
+            {
+                
+            }
             throw new NotImplementedException();
         }
 
@@ -37,7 +42,11 @@ namespace SinglyLinkedLists
 
         public void AddLast(string value)
         {
-            throw new NotImplementedException();
+            if (firstNode == null)
+                firstNode = new SinglyLinkedListNode(value);
+
+            else
+                this.LastNode().Next = new SinglyLinkedListNode(value);
         }
 
         // NOTE: There is more than one way to accomplish this.  One is O(n).  The other is O(1).
@@ -48,12 +57,21 @@ namespace SinglyLinkedLists
 
         public string ElementAt(int index)
         {
-            throw new NotImplementedException();
+            SinglyLinkedListNode res = firstNode;
+            for (int i = 0; i < index; i++)
+            {
+                res = res != null ? res.Next : null;
+            }
+            if (res != null)
+                return res.Value;
+            else
+                throw new ArgumentOutOfRangeException();
         }
+
 
         public string First()
         {
-            throw new NotImplementedException();
+            return firstNode != null ? firstNode.Value : null;
         }
 
         public int IndexOf(string value)
@@ -71,7 +89,21 @@ namespace SinglyLinkedLists
         // HINT 3: If you highlight code and right click, you can use the refactor menu to extract a method for you...
         public string Last()
         {
-            throw new NotImplementedException();
+            return this.LastNode().Value;
+        }
+
+        private SinglyLinkedListNode LastNode()
+        {
+            SinglyLinkedListNode lastNode = this.firstNode;
+            if (lastNode == null)
+                return lastNode;
+            while (true)
+            {
+                if (lastNode.Next == null)
+                    return lastNode;
+                else
+                    lastNode = lastNode.Next;
+            }
         }
 
         public void Remove(string value)

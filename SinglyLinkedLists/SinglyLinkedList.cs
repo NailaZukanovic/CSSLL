@@ -30,14 +30,45 @@ namespace SinglyLinkedLists
             set { throw new NotImplementedException(); }
         }
 
+        public override string ToString()
+        {
+            StringBuilder res = new StringBuilder("{ ");
+            SinglyLinkedListNode cur = firstNode;
+            while(cur != null)
+            {
+                res.Append(String.Format("\"{0}\"", cur.Value));
+                if (cur.Next != null)
+                    res.Append(", ");
+                else
+                    res.Append(" ");
+                cur = cur.Next;
+            }
+            res.Append("}");
+            return res.ToString();
+        }
+        
         public void AddAfter(string existingValue, string value)
         {
-            throw new NotImplementedException();
+            var cur = firstNode;
+            while (cur != null)
+            {
+                if (cur.Value == existingValue)
+                {
+                    var temp = cur.Next;
+                    cur.Next = new SinglyLinkedListNode(value);
+                    cur.Next.Next = temp;
+                    return;
+                }
+                cur = cur.Next;
+            }
+            throw new ArgumentException("Value not found");
         }
 
         public void AddFirst(string value)
         {
-            throw new NotImplementedException();
+            SinglyLinkedListNode temp = firstNode;
+            firstNode = new SinglyLinkedListNode(value);
+            firstNode.Next = temp;
         }
 
         public void AddLast(string value)
@@ -89,7 +120,8 @@ namespace SinglyLinkedLists
         // HINT 3: If you highlight code and right click, you can use the refactor menu to extract a method for you...
         public string Last()
         {
-            return this.LastNode().Value;
+            SinglyLinkedListNode last = this.LastNode();
+            return last != null ? last.Value : null;
         }
 
         private SinglyLinkedListNode LastNode()
@@ -118,7 +150,14 @@ namespace SinglyLinkedLists
 
         public string[] ToArray()
         {
-            throw new NotImplementedException();
+            List<string> res = new List<string>();
+            SinglyLinkedListNode cur = firstNode;
+            while (cur != null)
+            {
+                res.Add(cur.Value);
+                cur = cur.Next;
+            }
+            return res.ToArray();
         }
     }
 }

@@ -18,16 +18,26 @@ namespace SinglyLinkedLists
         {
             foreach (object thing in values)
             {
-                
+                this.AddLast(thing.ToString());
             }
-            throw new NotImplementedException();
         }
 
         // READ: http://msdn.microsoft.com/en-us/library/6x16t2tx.aspx
         public string this[int i]
         {
-            get { throw new NotImplementedException(); }
-            set { throw new NotImplementedException(); }
+            get { return this.ElementAt(i); }
+            set
+            {
+                if (i == 0){
+                    AddFirst(value);
+                    Remove(ElementAt(1));
+                }
+                else
+                {
+                    AddAfter(ElementAt(i-1), value);
+                    Remove(ElementAt(i + 1));
+                }
+            }
         }
 
         public override string ToString()
@@ -83,7 +93,14 @@ namespace SinglyLinkedLists
         // NOTE: There is more than one way to accomplish this.  One is O(n).  The other is O(1).
         public int Count()
         {
-            throw new NotImplementedException();
+            int res = 0;
+            var cur = firstNode;
+            while (cur != null)
+            {
+                res++;
+                cur = cur.Next;
+            }
+            return res;
         }
 
         public string ElementAt(int index)
@@ -92,6 +109,8 @@ namespace SinglyLinkedLists
             for (int i = 0; i < index; i++)
             {
                 res = res != null ? res.Next : null;
+                if (res == null)
+                    throw new ArgumentOutOfRangeException();
             }
             if (res != null)
                 return res.Value;
@@ -107,12 +126,30 @@ namespace SinglyLinkedLists
 
         public int IndexOf(string value)
         {
-            throw new NotImplementedException();
+            var cur = firstNode;
+            int res = 0;
+            while (cur != null)
+            {
+                if (cur.Value == value)
+                {
+                    return res;
+                }
+                cur = cur.Next;
+                res += 1;
+            }
+            return -1;
         }
 
         public bool IsSorted()
         {
-            throw new NotImplementedException();
+            var cur = firstNode;
+            while (cur != null)
+            {
+                if (cur.Next != null && string.CompareOrdinal(cur.Value, cur.Next.Value) > 0)
+                    return false;
+                cur = cur.Next;
+            }
+            return true;
         }
 
         // HINT 1: You can extract this functionality (finding the last item in the list) from a method you've already written!
@@ -140,12 +177,60 @@ namespace SinglyLinkedLists
 
         public void Remove(string value)
         {
-            throw new NotImplementedException();
+            var curNode = firstNode;
+            SinglyLinkedListNode prevNode = null;
+            do
+            {
+                if (curNode.Value == value)
+                {
+                    if (prevNode == null)
+                        firstNode = curNode.Next;
+                    else
+                        prevNode.Next = curNode.Next;
+                    return;
+                }
+                prevNode = curNode;
+                curNode = curNode.Next;
+            } while (curNode != null);
+            return;
         }
 
         public void Sort()
         {
-            throw new NotImplementedException();
+            if (firstNode == null || firstNode.Next == null)
+                return;
+            while (!IsSorted())
+            {
+                SinglyLinkedListNode prevPrev = null;
+                var prev = firstNode;
+                var cur = firstNode.Next;
+                while (cur != null)
+                {
+                    if (cur < prev)
+                    {
+                        Swap(prevPrev, prev, cur);
+                        break;
+                    }
+                    else
+                    {
+                        prevPrev = prev;
+                        prev = prev.Next;
+                        cur = cur.Next;
+                    }
+                }
+            }
+            return;
+        }
+
+        private void Swap(SinglyLinkedListNode prvPrv, SinglyLinkedListNode prv, SinglyLinkedListNode cir)
+        {
+            var tmp = prv;
+            prv.Next = cir.Next;
+            cir.Next = tmp;
+            if (firstNode == tmp)
+                firstNode = cir;
+            else
+                prvPrv.Next = cir;
         }
 
         public string[] ToArray()

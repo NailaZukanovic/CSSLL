@@ -66,6 +66,8 @@ namespace SinglyLinkedLists
         // READ: http://msdn.microsoft.com/en-us/library/system.icomparable.compareto.aspx
         public int CompareTo(Object obj)
         {
+            if (obj == null)
+                return 1;
             return this.value.CompareTo(obj.ToString());
         }
 

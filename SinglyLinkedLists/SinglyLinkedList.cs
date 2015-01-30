@@ -34,8 +34,9 @@ namespace SinglyLinkedLists
                 }
                 else
                 {
-                    AddAfter(ElementAt(i-1), value);
-                    Remove(ElementAt(i + 1));
+                    var temp = NodeAt(i).Next;
+                    NodeAt(i - 1).Next = new SinglyLinkedListNode(value);
+                    NodeAt(i).Next = temp;
                 }
             }
         }
@@ -199,38 +200,38 @@ namespace SinglyLinkedLists
         {
             if (firstNode == null || firstNode.Next == null)
                 return;
-            while (!IsSorted())
+            int length = this.Count();
+            for (int i = 0; i < length-1; i++)
             {
-                SinglyLinkedListNode prevPrev = null;
-                var prev = firstNode;
-                var cur = firstNode.Next;
-                while (cur != null)
+                int lowest = i;
+                for (int j = 1+i; j < length; j++)
                 {
-                    if (cur < prev)
-                    {
-                        Swap(prevPrev, prev, cur);
-                        break;
-                    }
-                    else
-                    {
-                        prevPrev = prev;
-                        prev = prev.Next;
-                        cur = cur.Next;
-                    }
+                    if (NodeAt(j) < NodeAt(lowest))
+                        lowest = j;
                 }
+                if (lowest != i)
+                    Swap(i, lowest);
             }
             return;
         }
 
-        private void Swap(SinglyLinkedListNode prvPrv, SinglyLinkedListNode prv, SinglyLinkedListNode cir)
+        private void Swap(int one, int two)
         {
-            var tmp = prv;
-            prv.Next = cir.Next;
-            cir.Next = tmp;
-            if (firstNode == tmp)
-                firstNode = cir;
-            else
-                prvPrv.Next = cir;
+            var swap = this[one];
+            var swapTwo = this[two];
+            this[two] = swap;
+            this[one] = swapTwo;
+        }
+
+
+        private SinglyLinkedListNode NodeAt(int i)
+        {
+            var res = firstNode;
+            for (int j = 0; j < i; j++)
+            {
+                res = res.Next;
+            }
+            return res;
         }
 
         public string[] ToArray()
